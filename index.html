@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>"Cheers" — The Pub App! | Coalville Pilot Platform</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- TOP NAVIGATION & BRAND SWITCHER -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-cluster">
+        <div class="brand-logo" id="brandIconBox">🍻</div>
+        <div>
+          <div class="brand-title">
+            <span id="brandNameText">Cheers</span>
+            <span style="font-size:0.75rem; background:var(--amber-soft); color:var(--amber); padding:0.15rem 0.55rem; border-radius:99px; font-weight:700;">
+              The Pub App!
+            </span>
+          </div>
+          <div class="brand-subtitle" id="brandSubtitleText">
+            "Cheers" — The Pub App! • Live Nights, Proper Pubs & Local Pint Perks
+          </div>
+        </div>
+        <div class="brand-switcher" title="Compare Brand Names Live">
+          <button type="button" class="brand-pill active" data-brand="Cheers" onclick="switchBrand('Cheers')">Cheers!</button>
+          <button type="button" class="brand-pill" data-brand="TapLocal" onclick="switchBrand('TapLocal')">TapLocal</button>
+          <button type="button" class="brand-pill" data-brand="PubPulse" onclick="switchBrand('PubPulse')">PubPulse</button>
+        </div>
+        <button type="button" class="btn btn-outline" style="padding:0.3rem 0.65rem; font-size:0.74rem;" onclick="resetDemoData()" title="Reset demo pubs & events">
+          🔄 Reset Demo
+        </button>
+      </div>
+
+      <nav class="mode-tabs">
+        <button type="button" class="mode-tab active" data-view="punter" onclick="switchView('punter')">
+          📱 Punter App (What's On)
+        </button>
+        <button type="button" class="mode-tab" data-view="landlord" onclick="switchView('landlord')">
+          🏠 Landlord Portal (£50/mo)
+        </button>
+        <button type="button" class="mode-tab" data-view="coop" onclick="switchView('coop')">
+          🤝 Co-op Buying Syndicate
+        </button>
+        <button type="button" class="mode-tab" data-view="founder" onclick="switchView('founder')">
+          🚀 Kyran & Matthew Sales HQ
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- PILOT LIVE METRICS BANNER -->
+    <section class="pilot-banner">
+      <div>
+        <div class="pilot-badge">
+          <span class="live-pulse"></span> Coalville & District Pilot (LE67)
+        </div>
+        <h1 style="font-size:1.35rem; font-weight:800;">
+          "<span class="dynamic-brand-name">Cheers</span>" — The Pub App! • Independent Pub Event Coordinator & Perks
+        </h1>
+        <p style="font-size:0.84rem; color: var(--text-muted); max-width: 720px;">
+          Discover tonight's open mic nights, live bands, pub quizzes, stand-up comedy, and exclusive QR bar deals across Coalville, Whitwick, Hugglescote & Ibstock.
+        </p>
+      </div>
+      <div class="pilot-stats">
+        <div class="pilot-stat">
+          <div class="pilot-stat-val" id="metricPubs">6</div>
+          <div class="pilot-stat-lbl">Founding Pubs</div>
+        </div>
+        <div class="pilot-stat">
+          <div class="pilot-stat-val" id="metricEvents">7</div>
+          <div class="pilot-stat-lbl">Live Events</div>
+        </div>
+        <div class="pilot-stat">
+          <div class="pilot-stat-val" id="metricRsvps">329</div>
+          <div class="pilot-stat-lbl">Punter RSVPs</div>
+        </div>
+        <div class="pilot-stat">
+          <div class="pilot-stat-val" id="metricRedemptions">207</div>
+          <div class="pilot-stat-lbl">QR Deals Scanned</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         VIEW 1: PUNTER APP (EVENTS, PUB DIRECTORY, QR DEALS, LOYALTY)
+         ========================================================= -->
+    <section id="view-punter" class="view-section active">
+      <div class="punter-grid">
+
+        <!-- Left Column: Events Coordinator & Pub Wares Directory -->
+        <div>
+          <div class="filter-bar">
+            <div class="category-pills">
+              <button type="button" class="cat-pill active" data-cat="ALL" onclick="filterByCategory('ALL')">🔥 All Tonight & This Week</button>
+              <button type="button" class="cat-pill" data-cat="Open Mic" onclick="filterByCategory('Open Mic')">🎤 Open Mic</button>
+              <button type="button" class="cat-pill" data-cat="Live" onclick="filterByCategory('Live')">🎸 Live Bands & Music</button>
+              <button type="button" class="cat-pill" data-cat="Stand-Up" onclick="filterByCategory('Stand-Up')">😂 Stand-Up Comedy</button>
+              <button type="button" class="cat-pill" data-cat="Quiz" onclick="filterByCategory('Quiz')">🧠 Pub Quiz</button>
+              <button type="button" class="cat-pill" data-cat="Karaoke" onclick="filterByCategory('Karaoke')">🎶 Karaoke</button>
+            </div>
+            <input
+              type="text"
+              class="search-input"
+              placeholder="🔍 Search Coalville pubs, ale, bands..."
+              oninput="onSearchInput(this.value)"
+            />
+          </div>
+
+          <div class="section-header">
+            <div class="section-title">🗓️ What's On in Coalville Pubs (Event Coordinator)</div>
+            <span style="font-size:0.78rem; color: var(--text-muted);">Tap "I'm Going" to boost pub attendance</span>
+          </div>
+          <div id="eventsContainer" class="events-list"></div>
+
+          <div class="section-header">
+            <div class="section-title">🍺 Local Independent Pubs ("Show Their Wares")</div>
+            <span style="font-size:0.78rem; color: var(--text-muted);">Tap any pub for menus, photos, hours & perks</span>
+          </div>
+          <div id="pubsContainer" class="pubs-grid"></div>
+        </div>
+
+        <!-- Right Column: Digital Loyalty Stamp Card & Live QR Vouchers -->
+        <aside>
+          <div class="sidebar-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3 style="font-size:1.05rem;">🏆 My Local Loyalty Card</h3>
+              <span class="day-badge">FREE FOR PUNTERS</span>
+            </div>
+            <p style="font-size:0.78rem; color: var(--text-muted); margin-top:0.25rem;">
+              Scan a QR offer or check in at any participating Coalville pub to earn digital stamps.
+            </p>
+            <div id="stampGridBox" class="stamp-grid"></div>
+            <div id="stampStatusText" style="font-size:0.8rem; font-weight:700; color: var(--amber); margin-bottom:0.75rem;"></div>
+            <button type="button" class="btn btn-outline btn-block" onclick="addDemoStamp()">
+              ✨ Simulate Earning a Bar Stamp
+            </button>
+          </div>
+
+          <div class="sidebar-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3 style="font-size:1.05rem;">🏷️ Instant QR Pub Offers</h3>
+              <span style="font-size:0.74rem; color: var(--emerald); font-weight:700;">Show at Bar</span>
+            </div>
+            <p style="font-size:0.78rem; color: var(--text-muted); margin-top:0.2rem;">
+              Tap any deal to generate your live bar QR code. Every scan proves ROI to the landlord!
+            </p>
+            <div id="dealsSidebarList"></div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
+         VIEW 2: LANDLORD PORTAL (30-SECOND UPLOADER & ROI TRACKER)
+         ========================================================= -->
+    <section id="view-landlord" class="view-section">
+      <div class="panel-card" style="margin-bottom:1.4rem;">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem;">
+          <div>
+            <span class="day-badge">SUPER-BASIC LANDLORD PORTAL • £50/MO SUBSCRIPTION</span>
+            <h2 style="font-size:1.35rem; margin-top:0.3rem;">Manage Your Pub Page in Under 30 Seconds</h2>
+            <p style="font-size:0.84rem; color: var(--text-muted);">
+              Select a Coalville pub below to view its live punter ROI and post new events, QR deals, or menu items.
+            </p>
+          </div>
+          <div style="min-width:290px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Select Pub to Manage:</label>
+            <select id="landlordPubSelect" class="form-control" onchange="onSelectLandlordPub(this.value)"></select>
+          </div>
+        </div>
+
+        <div class="roi-grid">
+          <div class="roi-box">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Monthly Pub Page Views</div>
+            <div class="roi-val" id="llViews">418</div>
+            <div style="font-size:0.72rem; color:var(--emerald);">↑ Local punters browsing</div>
+          </div>
+          <div class="roi-box">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Event "I'm Going" RSVPs</div>
+            <div class="roi-val" id="llRsvps">64</div>
+            <div style="font-size:0.72rem; color:var(--emerald);">↑ Guaranteed footfall</div>
+          </div>
+          <div class="roi-box">
+            <div style="font-size:0.75rem; color:var(--text-muted);">QR Deals Scanned at Bar</div>
+            <div class="roi-val" id="llRedemptions">39</div>
+            <div style="font-size:0.72rem; color:var(--emerald);">↑ Verified till transactions</div>
+          </div>
+          <div class="roi-box" style="border-color: var(--amber);">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Est. Till Spend Generated</div>
+            <div class="roi-val" id="llEstSpend">£1,058</div>
+            <div style="font-size:0.74rem; font-weight:700; color:var(--amber);" id="llRoiBadge">21.1x Return on £50/mo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Form 1: Post Entertainment Night -->
+        <div class="panel-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
+            <h3 style="font-size:1.1rem;">🎸 1. Post an Entertainment Night / Event</h3>
+            <button type="button" class="btn btn-outline" style="font-size:0.74rem;" onclick="autoFillChalkboardDemo()">
+              📸 Demo: Snap Chalkboard Photo AI
+            </button>
+          </div>
+          <form onsubmit="submitNewEvent(event)">
+            <div class="form-group">
+              <label>Event Title (e.g. Friday Open Mic, Oasis Tribute, Cash Quiz)</label>
+              <input type="text" id="evTitle" class="form-control" placeholder="e.g. Acoustic Open Mic & Free Performer Pint" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Category</label>
+                <select id="evCategory" class="form-control">
+                  <option value="Open Mic">🎤 Open Mic</option>
+                  <option value="Live Bands">🎸 Live Bands</option>
+                  <option value="Live Music">🎶 Acoustic / Live Music</option>
+                  <option value="Stand-Up">😂 Stand-Up Comedy</option>
+                  <option value="Pub Quiz">🧠 Pub Quiz</option>
+                  <option value="Karaoke">🎤 Karaoke Night</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>When is it?</label>
+                <select id="evDayTag" class="form-control">
+                  <option value="TONIGHT">🔥 TONIGHT</option>
+                  <option value="TOMORROW">📅 TOMORROW</option>
+                  <option value="THURSDAY">🗓️ THIS THURSDAY</option>
+                  <option value="FRIDAY">🎉 THIS FRIDAY</option>
+                  <option value="SATURDAY">🍻 THIS SATURDAY</option>
+                  <option value="SUNDAY">☀️ THIS SUNDAY</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start / Finish Time</label>
+                <input type="text" id="evTime" class="form-control" placeholder="e.g. 8:30 PM - 11:30 PM" required />
+              </div>
+              <div class="form-group">
+                <label>Entry / Punter Hook</label>
+                <input type="text" id="evEntry" class="form-control" placeholder="e.g. Free Entry" value="Free Entry" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Short Description for Punters</label>
+              <input type="text" id="evDesc" class="form-control" placeholder="e.g. Local artists welcome, £3.80 guest ales all night!" required />
+            </div>
+            <button type="submit" class="btn btn-amber btn-block">🚀 Publish Event to Coalville Feed</button>
+          </form>
+        </div>
+
+        <!-- Form 2: Post QR Deal + Update Menu -->
+        <div style="display:flex; flex-direction:column; gap:1.4rem;">
+          <div class="panel-card">
+            <h3 style="font-size:1.1rem; margin-bottom:0.85rem;">🏷️ 2. Create a QR Code Bar or Food Promotion</h3>
+            <form onsubmit="submitNewDeal(event)">
+              <div class="form-group">
+                <label>Offer Headline</label>
+                <input type="text" id="dlTitle" class="form-control" placeholder="e.g. £1 Off Any Cask Pint or 2-for-£15 Steak Night" required />
+              </div>
+              <div class="form-group">
+                <label>Terms / Details shown on QR Pass</label>
+                <input type="text" id="dlSubtitle" class="form-control" placeholder="e.g. Show QR code at the bar between 5pm and 9pm" required />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Valid Days / Times</label>
+                  <input type="text" id="dlValidDays" class="form-control" placeholder="e.g. Wed & Thu 5-9pm" required />
+                </div>
+                <div class="form-group">
+                  <label>Highlight Badge</label>
+                  <input type="text" id="dlBadge" class="form-control" placeholder="e.g. £1 OFF PINT" required />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-emerald btn-block">📲 Generate Live QR Deal</button>
+            </form>
+          </div>
+
+          <div class="panel-card">
+            <h3 style="font-size:1.1rem; margin-bottom:0.85rem;">🍔 3. Add Drink or Food Item to Pub Menu</h3>
+            <form onsubmit="submitNewMenuItem(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Item Name</label>
+                  <input type="text" id="mnName" class="form-control" placeholder="e.g. Sunday Beef Carvery" required />
+                </div>
+                <div class="form-group">
+                  <label>Price</label>
+                  <input type="text" id="mnPrice" class="form-control" placeholder="e.g. £13.95" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Category</label>
+                  <select id="mnCategory" class="form-control">
+                    <option value="Drinks">🍺 Drinks / Draught / Cask</option>
+                    <option value="Food">🍽️ Food / Mains / Bar Snacks</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Note (Optional)</label>
+                  <input type="text" id="mnNote" class="form-control" placeholder="e.g. Served 12-4pm" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-outline btn-block">➕ Add to Pub Page Menu</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         VIEW 3: COOPERATIVE BUYING SYNDICATE (INPUT COST REDUCTION)
+         ========================================================= -->
+    <section id="view-coop" class="view-section">
+      <div class="panel-card" style="margin-bottom:1.4rem;">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem;">
+          <div>
+            <span class="day-badge">STAGE 2 MOAT • GROUP PURCHASING ORGANISATION (GPO)</span>
+            <h2 style="font-size:1.35rem; margin-top:0.3rem;">Independent Pub Cooperative Buying Syndicate</h2>
+            <p style="font-size:0.84rem; color: var(--text-muted); max-width:780px;">
+              Greene King and Wetherspoons use massive scale to crush supplier prices. Once we unite Coalville's independents on <strong>"<span class="dynamic-brand-name">Cheers</span>" — The Pub App!</strong>, our pubs unlock group rates on <strong>Tie-Safe</strong> categories—saving landlords 3x to 6x more than their £50/month subscription fee!
+            </p>
+          </div>
+          <div class="pilot-stat" style="border-color:var(--emerald); padding:0.85rem 1.3rem;">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Combined Potential Saving / Pub</div>
+            <div style="font-size:1.6rem; font-weight:800; color:var(--emerald);" id="coopPotentialTotal">£490/mo</div>
+            <div style="font-size:0.72rem; color:var(--amber);">vs £50/mo App Subscription</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="coopDealsGrid" class="events-list"></div>
+    </section>
+
+    <!-- =========================================================
+         VIEW 4: FOUNDER & KYRAN SALES HQ (DOOR-TO-DOOR TOOLKIT)
+         ========================================================= -->
+    <section id="view-founder" class="view-section">
+      <div class="dashboard-grid">
+
+        <!-- Left: 60-Second Door-to-Door Pub Onboarding Form -->
+        <div class="panel-card">
+          <span class="day-badge">KYRAN'S DOOR-TO-DOOR COALVILLE ONBOARDING TOOL</span>
+          <h3 style="font-size:1.2rem; margin:0.4rem 0;">Sign Up a New Pub on the Spot (60 Seconds)</h3>
+          <p style="font-size:0.82rem; color: var(--text-muted); margin-bottom:1rem;">
+            When Kyran walks into a pub in Coalville, type their details here and show the landlord their live pub page, first event, and QR deal on his phone immediately.
+          </p>
+          <form onsubmit="submitOnboardPub(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Pub Name *</label>
+                <input type="text" id="obName" class="form-control" placeholder="e.g. The Red Lion" required />
+              </div>
+              <div class="form-group">
+                <label>Town / Village *</label>
+                <input type="text" id="obArea" class="form-control" value="Coalville" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Address / Postcode</label>
+                <input type="text" id="obAddress" class="form-control" placeholder="High St, Coalville LE67" />
+              </div>
+              <div class="form-group">
+                <label>Pub Tie Status (For Co-op Buying)</label>
+                <select id="obTieStatus" class="form-control">
+                  <option value="Freehouse">Freehouse (Free of Tie on All)</option>
+                  <option value="PubCo Tied (Free on Ancillaries)">PubCo Tied (Free on Gas/Food/Acts)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Pub Strapline / What They're Known For</label>
+              <input type="text" id="obTagline" class="form-control" placeholder="e.g. Proper Cask Ales, Live Weekend Bands & Beer Garden" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Opening Hours</label>
+                <input type="text" id="obHours" class="form-control" value="Mon-Sun 12:00-23:30" />
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="obPhone" class="form-control" value="01530 820100" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Key Features (comma separated)</label>
+              <input type="text" id="obTags" class="form-control" value="Live Music, Real Ale, Dog Friendly, Beer Garden" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Signature Draught / Pint</label>
+                <input type="text" id="obDrink" class="form-control" value="Charnwood Cask Ale (£4.20)" />
+              </div>
+              <div class="form-group">
+                <label>Signature Food Dish</label>
+                <input type="text" id="obFood" class="form-control" value="Steak & Ale Pie (£12.50)" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Entertainment Night to List</label>
+                <input type="text" id="obFirstEvent" class="form-control" placeholder="e.g. Friday Acoustic Open Mic at 8:30pm" />
+              </div>
+              <div class="form-group">
+                <label>First Punter QR Offer</label>
+                <input type="text" id="obFirstDeal" class="form-control" placeholder="e.g. £1 Off Your First Pint with App QR" />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-amber btn-block" style="padding:0.7rem;">
+              🍻 Create Live Pub Page Now (£50/mo Plan)
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Business Model & Beer Mat QR Preview -->
+        <div style="display:flex; flex-direction:column; gap:1.4rem;">
+          <div class="panel-card">
+            <span class="day-badge">COMMERCIAL VIABILITY & SCALE CALCULATOR</span>
+            <h3 style="font-size:1.15rem; margin:0.35rem 0 0.85rem;">Subscription + Co-op Rebate Revenue Modeller</h3>
+
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                <span>Active Independent Pubs Signed Up:</span>
+                <span style="color:var(--amber);" id="calcPubsLabel">25 Pubs</span>
+              </div>
+              <input type="range" id="calcPubsSlider" min="6" max="250" value="25" style="width:100%; margin-top:0.35rem;" oninput="updateRevenueCalculator()" />
+              <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted);">
+                <span>6 (Coalville Pilot)</span>
+                <span>50 (NW Leics)</span>
+                <span>120 (Leicestershire)</span>
+                <span>250 (East Mids)</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                  <span>Monthly App Fee:</span>
+                  <strong style="color:var(--amber);" id="calcFeeLabel">£50/mo</strong>
+                </div>
+                <input type="range" id="calcFeeSlider" min="35" max="95" step="5" value="50" style="width:100%; margin-top:0.35rem;" oninput="updateRevenueCalculator()" />
+              </div>
+              <div class="form-group">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                  <span>Co-op Supplier Rebate / Pub:</span>
+                  <strong style="color:var(--emerald);" id="calcCoopLabel">£25/mo</strong>
+                </div>
+                <input type="range" id="calcCoopSlider" min="0" max="75" step="5" value="25" style="width:100%; margin-top:0.35rem;" oninput="updateRevenueCalculator()" />
+              </div>
+            </div>
+
+            <div class="roi-grid" style="margin-bottom:0;">
+              <div class="roi-box">
+                <div style="font-size:0.72rem; color:var(--text-muted);">SaaS Subscriptions</div>
+                <div class="roi-val" id="revMonthlySubs" style="font-size:1.3rem;">£1,250</div>
+              </div>
+              <div class="roi-box">
+                <div style="font-size:0.72rem; color:var(--text-muted);">Co-op Supplier Margin</div>
+                <div class="roi-val" id="revMonthlyCoop" style="font-size:1.3rem; color:var(--emerald);">£625</div>
+              </div>
+              <div class="roi-box">
+                <div style="font-size:0.72rem; color:var(--text-muted);">Total Monthly Revenue</div>
+                <div class="roi-val" id="revMonthlyTotal" style="font-size:1.3rem;">£1,875/mo</div>
+              </div>
+              <div class="roi-box" style="border-color:var(--amber);">
+                <div style="font-size:0.72rem; color:var(--text-muted);">Annualised Run Rate</div>
+                <div class="roi-val" id="revAnnualTotal" style="font-size:1.3rem;">£22,500/yr</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Printable Beer Mat / Table Tent Preview -->
+          <div class="panel-card">
+            <h3 style="font-size:1.05rem; margin-bottom:0.65rem;">🍺 How We Get Punters Free: Table Talker / Beer Mat Design</h3>
+            <div class="tent-preview">
+              <div style="font-size:0.72rem; font-weight:800; color:var(--amber); letter-spacing:0.06em;">
+                COALVILLE'S OFFICIAL INDEPENDENT PUB GUIDE
+              </div>
+              <div style="font-size:1.45rem; font-weight:900; margin:0.25rem 0;">
+                🍻 "<span class="dynamic-brand-name">Cheers</span>" — The Pub App!
+              </div>
+              <p style="font-size:0.82rem; color:var(--text-muted); max-width:380px; margin:0 auto 0.75rem;">
+                Scan in 2 seconds to see every <strong>Live Band, Open Mic, Quiz Night & Drink Promo</strong> in Coalville — plus claim <strong>£1 Off Your Next Pint</strong> & Digital Loyalty Stamps!
+              </p>
+              <div style="display:inline-block; background:#fff; color:#0f141c; padding:0.5rem 1rem; border-radius:10px; font-weight:800; font-size:0.8rem;">
+                📱 SCAN QR ON YOUR TABLE • 100% FREE FOR PUNTERS
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: PUB FULL PROFILE & MENU -->
+  <div id="pubModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('pubModal')">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+        <span style="font-size:0.78rem; font-weight:700; color:var(--amber);">"<span class="dynamic-brand-name">Cheers</span>" — The Pub App! • Venue Profile</span>
+        <button type="button" class="btn btn-outline" onclick="closeModal('pubModal')">✕ Close</button>
+      </div>
+      <div id="pubModalContent"></div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: LIVE QR VOUCHER & BAR SCANNER SIMULATOR -->
+  <div id="qrModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('qrModal')">
+    <div class="modal-card" style="max-width:440px; text-align:center;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span class="day-badge"><span class="live-pulse"></span> LIVE PUNTER QR PASS</span>
+        <button type="button" class="btn btn-outline" onclick="closeModal('qrModal')">✕</button>
+      </div>
+
+      <h3 id="qrModalPubName" style="margin-top:0.75rem; color:var(--amber); font-size:1rem;"></h3>
+      <h2 id="qrModalDealTitle" style="font-size:1.25rem; margin:0.25rem 0;"></h2>
+      <p id="qrModalDealSub" style="font-size:0.82rem; color:var(--text-muted);"></p>
+
+      <div class="qr-box">
+        <div style="font-size:0.7rem; font-weight:800; letter-spacing:0.06em; color:#475569;">SHOW TO BAR STAFF</div>
+        <div id="qrMatrixVisual" class="qr-matrix"></div>
+        <div id="qrModalCodeText" style="font-family:monospace; font-size:1.2rem; font-weight:900; letter-spacing:0.08em;"></div>
+        <div style="font-size:0.68rem; color:#64748b; margin-top:0.2rem;">Verified by "Cheers" — The Pub App!</div>
+      </div>
+
+      <div id="qrRedeemFeedback" style="display:none; background:var(--emerald-soft); border:1px solid var(--emerald); color:#a7f3d0; padding:0.75rem; border-radius:10px; font-size:0.8rem; margin-bottom:0.85rem;"></div>
+
+      <button type="button" class="btn btn-emerald btn-block" onclick="simulateBarScan()">
+        ✅ Simulate Bar Staff Scanning This QR Code
+      </button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
