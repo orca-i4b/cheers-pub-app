@@ -297,6 +297,12 @@ function resetDemoData() {
   showToast("🔄 Demo data reset to the 6 Founding Coalville Pubs!");
 }
 
+function shareOnWhatsApp() {
+  const permUrl = "https://orca-i4b.github.io/cheers-pub-app/";
+  const msg = `🍻 Mate, take a look at "Cheers" — The Pub App! (Coalville Pilot):\n${permUrl}\n\nHave a play with the 4 tabs at the top (Punter App, £50/mo Landlord Portal, Co-op Buying Syndicate, and our 60-second Pub Onboarding HQ)!`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
 function switchBrand(brandKey) {
   activeBrand = brandKey;
   const cfg = BRAND_CONFIGS[brandKey] || BRAND_CONFIGS.Cheers;
